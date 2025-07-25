@@ -3,41 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reloj Bonito</title>
+  <title>Flip Clock</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
+      margin: 0;
       height: 100vh;
+      background: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d') center/cover no-repeat;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Orbitron', sans-serif;
+      color: white;
+    }
+
+    .date {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
     }
 
     .clock {
-      color: #ffffff;
-      font-size: 5rem;
-      font-weight: bold;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-      transition: all 0.2s ease-in-out;
-      animation: pulse 1s infinite ease-in-out;
+      display: flex;
+      gap: 20px;
     }
 
-    @keyframes pulse {
-      0% { text-shadow: 0 0 10px rgba(255,255,255,0.2); }
-      50% { text-shadow: 0 0 20px rgba(255,255,255,0.5); }
-      100% { text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+    .flip-box {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      width: 100px;
+      height: 130px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 4rem;
+      box-shadow: inset 0 -2px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .flip-box::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.2);
     }
   </style>
 </head>
 <body>
-  <div class="clock" id="clock">--:--:--</div>
+  <div class="date" id="date">Cargando fecha...</div>
+  <div class="clock">
+    <div class="flip-box" id="hours">00</div>
+    <div class="flip-box" id="minutes">00</div>
+    <div class="flip-box" id="seconds">00</div>
+  </div>
 
   <script>
     function updateClock() {
@@ -45,11 +68,18 @@
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const seconds = String(now.getSeconds()).padStart(2, '0');
-      document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+
+      document.getElementById('hours').textContent = hours;
+      document.getElementById('minutes').textContent = minutes;
+      document.getElementById('seconds').textContent = seconds;
+
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const formattedDate = now.toLocaleDateString('es-ES', options);
+      document.getElementById('date').textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
     }
 
     setInterval(updateClock, 1000);
-    updateClock(); // Initial call
+    updateClock();
   </script>
 </body>
 </html>
